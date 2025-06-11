@@ -1,0 +1,345 @@
+= SPARC Architecture for [Project Name]
+
+== Technology Stack
+
+=== Backend Technologies
+- **Runtime**: Node.js 18.x LTS
+- **Framework**: Express.js 4.18+
+- **Language**: TypeScript 5.0+
+- **API**: REST with OpenAPI 3.0 documentation
+- **Authentication**: JWT with bcrypt password hashing
+
+=== Database Technologies
+- **Primary Database**: PostgreSQL 15+
+- **ORM**: Prisma 5.0+
+- **Caching**: Redis 7.0+
+- **Search**: Elasticsearch 8.0+ (if needed)
+
+=== Frontend Technologies
+- **Framework**: React 18+ with TypeScript
+- **Build Tool**: Vite 4.0+
+- **UI Library**: Material-UI 5.0+
+- **State Management**: Zustand or Redux Toolkit
+- **HTTP Client**: Axios with interceptors
+
+=== DevOps & Infrastructure
+- **Containerization**: Docker with multi-stage builds
+- **Orchestration**: Docker Compose (development), Kubernetes (production)
+- **CI/CD**: GitHub Actions
+- **Cloud Provider**: AWS (configurable)
+- **Monitoring**: Prometheus + Grafana
+- **Logging**: ELK Stack (Elasticsearch, Logstash, Kibana)
+
+== Project Structure
+
+```
+project-root/
+├── apps/
+│   ├── api/                    # Backend API application
+│   │   ├── src/
+│   │   │   ├── controllers/    # Request handlers
+│   │   │   ├── services/       # Business logic
+│   │   │   ├── repositories/   # Data access layer
+│   │   │   ├── middleware/     # Express middleware
+│   │   │   ├── types/          # TypeScript definitions
+│   │   │   ├── utils/          # Utility functions
+│   │   │   └── app.ts          # Application entry point
+│   │   ├── tests/              # API tests
+│   │   ├── prisma/             # Database schema and migrations
+│   │   ├── Dockerfile
+│   │   └── package.json
+│   └── web/                    # Frontend application
+│       ├── src/
+│       │   ├── components/     # Reusable UI components
+│       │   ├── pages/          # Page components
+│       │   ├── hooks/          # Custom React hooks
+│       │   ├── services/       # API service functions
+│       │   ├── types/          # TypeScript definitions
+│       │   ├── utils/          # Utility functions
+│       │   └── main.tsx        # Application entry point
+│       ├── tests/              # Frontend tests
+│       ├── Dockerfile
+│       └── package.json
+├── packages/
+│   ├── shared/                 # Shared code between apps
+│   │   ├── types/              # Common TypeScript types
+│   │   ├── utils/              # Shared utilities
+│   │   └── constants/          # Application constants
+│   └── eslint-config/          # Shared ESLint configuration
+├── deployment/
+│   ├── docker/                 # Docker configurations
+│   ├── kubernetes/             # K8s manifests
+│   ├── terraform/              # Infrastructure as Code
+│   └── scripts/                # Deployment scripts
+├── docs/                       # Documentation
+│   ├── api/                    # API documentation
+│   ├── deployment/             # Deployment guides
+│   └── development/            # Development setup
+├── tools/                      # Development tools and scripts
+├── .github/                    # GitHub Actions workflows
+├── docker-compose.yml          # Local development environment
+├── package.json                # Root package configuration
+└── README.md
+```
+
+== Code Quality Standards
+
+=== Complexity Thresholds
+- **Cyclomatic Complexity**: Max 10 per function
+- **Cognitive Complexity**: Max 15 per function
+- **Maintainability Index**: Min 70
+- **File Length**: Max 300 lines per file
+- **Function Length**: Max 50 lines per function
+
+=== Coverage Requirements
+- **Unit Test Coverage**: Min 90%
+- **Integration Test Coverage**: Min 80%
+- **E2E Test Coverage**: Min 70%
+- **Documentation Coverage**: Min 85%
+- **API Endpoint Coverage**: 100%
+
+=== Code Review Guidelines
+- **Review Size**: Max 400 lines per review
+- **Review Time**: Within 24 hours for non-urgent, 4 hours for urgent
+- **Required Checks**:
+  - [ ] Security checklist completed
+  - [ ] Performance impact assessed
+  - [ ] Architecture compliance validated
+  - [ ] Test coverage maintained
+  - [ ] Documentation updated
+
+== Security Standards
+
+=== OWASP Compliance
+- **A01 - Broken Access Control**: Role-based access control (RBAC)
+- **A02 - Cryptographic Failures**: TLS 1.3, bcrypt password hashing
+- **A03 - Injection**: Parameterized queries, input validation
+- **A04 - Insecure Design**: Security by design principles
+- **A05 - Security Misconfiguration**: Secure defaults, configuration management
+- **A06 - Vulnerable Components**: Dependency scanning, regular updates
+- **A07 - Authentication Failures**: JWT with refresh tokens, rate limiting
+- **A08 - Software Integrity Failures**: Code signing, CI/CD security
+- **A09 - Logging Failures**: Comprehensive audit logging
+- **A10 - Server-Side Request Forgery**: URL validation, allowlist
+
+=== Authentication & Authorization
+- **JWT Tokens**: 15-minute access tokens, 7-day refresh tokens
+- **Password Policy**: Min 8 chars, special chars, numbers, uppercase
+- **MFA Support**: TOTP-based two-factor authentication
+- **Session Management**: Secure session handling, logout functionality
+- **API Security**: Rate limiting, API key validation
+
+=== Data Protection
+- **Encryption at Rest**: AES-256 for sensitive data
+- **Encryption in Transit**: TLS 1.3 for all communications
+- **Data Classification**: Public, Internal, Confidential, Restricted
+- **Data Retention**: Automated data lifecycle management
+- **Privacy**: GDPR compliance, data minimization
+
+=== Vulnerability Thresholds
+- **Critical**: 0 allowed - Immediate fix required
+- **High**: Max 2, with mitigation plan within 48 hours
+- **Medium**: Max 10, documented with fix timeline
+- **Low**: Max 50, tracked in backlog
+
+== Coding Guidelines
+
+=== TypeScript Standards
+
+```typescript
+// Use strict type definitions
+interface User {
+  readonly id: string
+  name: string
+  email: string
+  createdAt: Date
+}
+
+// Prefer const assertions for immutable data
+const API_ENDPOINTS = {
+  USERS: '/api/users',
+  AUTH: '/api/auth'
+} as const
+
+// Use meaningful function names
+function validateUserInput(input: unknown): input is CreateUserRequest {
+  // Implementation
+}
+
+// Error handling with custom error types
+class ValidationError extends Error {
+  constructor(public field: string, message: string) {
+    super(message)
+    this.name = 'ValidationError'
+  }
+}
+```
+
+=== Naming Conventions
+- **Variables/Functions**: camelCase (`userName`, `getUserById`)
+- **Constants**: SCREAMING_SNAKE_CASE (`API_BASE_URL`)
+- **Classes/Interfaces**: PascalCase (`UserService`, `CreateUserRequest`)
+- **Files**: kebab-case (`user-service.ts`, `create-user.dto.ts`)
+- **Database**: snake_case (`user_id`, `created_at`)
+
+=== Documentation Standards
+
+```typescript
+/**
+ * Authenticates a user with the provided credentials
+ * 
+ * @param credentials - User login credentials
+ * @returns Promise resolving to authentication token
+ * @throws {ValidationError} When credentials are invalid
+ * @throws {AuthenticationError} When authentication fails
+ * 
+ * @example
+ * ```typescript
+ * const token = await authenticateUser({
+ *   username: 'john@example.com',
+ *   password: 'securePassword123'
+ * })
+ * ```
+ */
+async function authenticateUser(credentials: LoginCredentials): Promise<AuthToken> {
+  // Implementation
+}
+```
+
+== Deployment Architecture
+
+[plantuml]
+----
+!include <C4/C4_Deployment>
+title Deployment Overview
+
+Deployment_Node(cdn, "CDN", "CloudFront") {
+  Container(static, "Static Assets", "HTML, CSS, JS")
+}
+
+Deployment_Node(alb, "Load Balancer", "Application Load Balancer") {
+  Container(routing, "Request Routing", "Path-based routing")
+}
+
+Deployment_Node(k8s, "Kubernetes Cluster", "EKS") {
+  Deployment_Node(web_pods, "Web Pods", "3 replicas") {
+    Container(web_app, "Web Application", "React SPA")
+  }
+  
+  Deployment_Node(api_pods, "API Pods", "3 replicas") {
+    Container(api_app, "API Application", "Node.js + Express")
+  }
+  
+  Deployment_Node(redis_pod, "Cache Pod", "1 replica") {
+    Container(redis, "Redis Cache", "In-memory cache")
+  }
+}
+
+Deployment_Node(rds, "Database", "RDS PostgreSQL") {
+  Container(primary_db, "Primary DB", "PostgreSQL 15")
+  Container(replica_db, "Read Replica", "PostgreSQL 15")
+}
+
+Deployment_Node(monitoring, "Monitoring", "CloudWatch + Grafana") {
+  Container(metrics, "Metrics", "Prometheus")
+  Container(logs, "Logs", "ELK Stack")
+  Container(alerts, "Alerts", "AlertManager")
+}
+
+Rel(cdn, alb, "HTTPS")
+Rel(alb, web_pods, "HTTPS")
+Rel(alb, api_pods, "HTTPS")
+Rel(api_pods, redis_pod, "TCP")
+Rel(api_pods, primary_db, "TCP")
+Rel(api_pods, replica_db, "TCP")
+Rel(k8s, monitoring, "Metrics & Logs")
+----
+
+=== Environment Configuration
+
+==== Development Environment
+- **Local**: Docker Compose with hot reloading
+- **Database**: PostgreSQL container
+- **Cache**: Redis container
+- **Monitoring**: Basic logging to console
+
+==== Staging Environment
+- **Infrastructure**: Kubernetes cluster (smaller instance)
+- **Database**: RDS PostgreSQL (development tier)
+- **Cache**: ElastiCache Redis (single node)
+- **Monitoring**: CloudWatch + basic Grafana
+
+==== Production Environment
+- **Infrastructure**: Kubernetes cluster (production tier)
+- **Database**: RDS PostgreSQL (Multi-AZ, backup enabled)
+- **Cache**: ElastiCache Redis (cluster mode)
+- **Monitoring**: Full observability stack
+- **Security**: WAF, VPC, security groups
+
+=== Scaling Strategy
+
+==== Horizontal Pod Autoscaler (HPA)
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-deployment
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+```
+
+==== Database Scaling
+- **Read Replicas**: For read-heavy workloads
+- **Connection Pooling**: PgBouncer for connection management
+- **Partitioning**: Time-based partitioning for large tables
+- **Caching**: Redis for frequently accessed data
+
+== Monitoring & Observability
+
+=== Metrics Collection
+- **Application Metrics**: Custom business metrics
+- **Infrastructure Metrics**: CPU, memory, disk, network
+- **Database Metrics**: Query performance, connection pool
+- **API Metrics**: Response time, error rate, throughput
+
+=== Logging Strategy
+- **Structured Logging**: JSON format with correlation IDs
+- **Log Levels**: ERROR, WARN, INFO, DEBUG
+- **Security Logging**: Authentication events, access attempts
+- **Audit Logging**: Data modifications, admin actions
+
+=== Alerting Rules
+- **Critical**: Service down, data loss, security breach
+- **Warning**: High error rate, performance degradation
+- **Info**: Deployment events, scaling events
+
+== Disaster Recovery
+
+=== Backup Strategy
+- **Database**: Automated daily backups with 30-day retention
+- **Files**: S3 with versioning and cross-region replication
+- **Configuration**: Infrastructure as Code in version control
+
+=== Recovery Procedures
+- **RTO (Recovery Time Objective)**: 4 hours
+- **RPO (Recovery Point Objective)**: 1 hour
+- **Runbooks**: Documented procedures for common scenarios
+- **Testing**: Monthly disaster recovery drills
